@@ -17,7 +17,7 @@
 > La instrucción `add` suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
 > 
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > add $s2, $s1, $s0
 > ```
 
@@ -28,7 +28,7 @@
 > Que sea con signo extenido significa que si el valor inmediato es negativo, se extiende el bit de signo para que el valor sea negativo. 
 >  
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > addi $s2, $s1, 10
 > ```
 
@@ -38,7 +38,7 @@
 > La instrucción `sub` resta los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`. 
 >  
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > sub $s2, $s1, $s0
 > ```
 
@@ -49,7 +49,7 @@
 > *Puede ser útil para cargar un valor de un vector en un registro.*
 > 
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > lw $t1, 0($t0)
 > ```
 
@@ -61,7 +61,7 @@
 > Esto, en la prácica, es equivalente a multiplicar el contenido de `$t1` por 2^d^.
 >
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > # $t1 00011 (3 en binario)
 > sll $t2, $t1, 2
 > # $t2 01100 (12 en binario; 3 * 2^2 = 12)
@@ -81,7 +81,7 @@
 > t2 = (t1 < t0) ? 1 : 0
 > ```
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > # $t1 = 5, $t0 = 3
 > slt $t2, $t1, $t0
 > # $t2 = 0 (5 no es menor que 3)
@@ -107,6 +107,6 @@
 > La instrucción `la` carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
 >
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > la $s0, A
 > ```
