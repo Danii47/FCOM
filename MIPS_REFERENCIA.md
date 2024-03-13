@@ -30,7 +30,7 @@
 > Que sea con signo extenido significa que si el valor inmediato es negativo, se extiende el bit de signo para que el valor sea negativo. 
 >  
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > addi $s2, $s1, 10
 > ```
 
