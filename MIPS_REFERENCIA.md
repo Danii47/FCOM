@@ -13,7 +13,7 @@
 | slt | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | slt $t2, $t1, $t0 |
 | slti | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, establece rd en 0 | slti $t2, $t1, 5 |
 
-> [!TIP]
+> [!TI]
 > La instrucción `add` suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
 > 
 > **Ejemplo ASM:**
@@ -23,7 +23,7 @@
 
 ----
 
-> [!TIP] addi
+> [!TIP]
 > La instrucción `addi` suma el valor inmediato `x` (Ej: 10) al valor del registro `$s1` y almacena el resultado en el registro `$s2`.  
 > Que sea con signo extenido significa que si el valor inmediato es negativo, se extiende el bit de signo para que el valor sea negativo. 
 >  
@@ -34,7 +34,7 @@
 
 ----
 
-> [!TIP] sub
+> [!TIP]
 > La instrucción `sub` resta los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`. 
 >  
 > **Ejemplo ASM:**
@@ -44,7 +44,7 @@
 
 ----
 
-> [!TIP] lw
+> [!TIP]
 > La instrucción `lw` carga la palabra en la dirección de memoria contenida en el registro `$t1` en el registro `$t2`. El desplazamiento es `0`, por lo que se carga la palabra exactamente en la dirección contenida en `$t1`.  
 > *Puede ser útil para cargar un valor de un vector en un registro.*
 > 
@@ -55,7 +55,7 @@
 
 ----
 
-> [!TIP] sll
+> [!TIP]
 > La instrucción `sll` desplaza el contenido del registro `$t1` un `d` posiciones a la izquierda y almacena el resultado en el registro `$t2`.
 > 
 > Esto, en la prácica, es equivalente a multiplicar el contenido de `$t1` por 2^d^.
@@ -69,7 +69,7 @@
 
 ----
 
-> [!TIP] slt
+> [!TIP]
 > La instrucción `slt` establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor del registro `$t0`, de lo contrario, establece el valor del registro `$t2` en 0. 
 >  
 > **En Python:**
@@ -89,7 +89,7 @@
 
 ----
 
-> [!TIP] slti
+> [!TIP]
 > La instrucción `slti` establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor inmediato `x`, de lo contrario, establece el valor del registro `$t2` en 0.  
 > 
 > Funciona igual que `slt`, pero en lugar de comparar con el valor de otro registro, compara con un valor inmediato.
@@ -103,7 +103,7 @@
 
 ----
 
-> [!TIP] la
+> [!TIP]
 > La instrucción `la` carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
 >
 > **Ejemplo ASM:**
