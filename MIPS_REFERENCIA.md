@@ -13,7 +13,7 @@
 | slt | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | slt $t2, $t1, $t0 |
 | slti | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, establece rd en 0 | slti $t2, $t1, 5 |
 
-> [!TI]
+> [!TIP]
 > La instrucción `add` suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
 > 
 > **Ejemplo ASM:**
