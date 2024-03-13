@@ -12,11 +12,16 @@
 | sll | rd, rt, d | Desplaza a la izquierda el contenido de rt d veces y lo almacena en rd | sll $t2, $t1, 2 |
 | slt | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | slt $t2, $t1, $t0 |
 | slti | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, establece rd en 0 | slti $t2, $t1, 5 |
+| sw | rt, d(rs) | Almacena el contenido de rt en la dirección de memoria rs + d | sw $t1, 4($t0) |
+| beq | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs == rt | beq $t1, $t2, L1 |
+| bne | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs != rt | bne $t1, $t2, L1 |
 
 ----
 
 > [!TIP]
-> La instrucción `add` suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
+> La instrucción `add` (_`ADD`_) suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
+>
+> *También puede usarse para "copiar" el valor de un registro a otro sumandole $zero.*  
 > 
 > **Ejemplo ASM:**
 > ```asm
@@ -26,7 +31,7 @@
 ----
 
 > [!TIP]
-> La instrucción `addi` suma el valor inmediato `x` (Ej: 10) al valor del registro `$s1` y almacena el resultado en el registro `$s2`.  
+> La instrucción `addi` (_`ADD inmediate`_) suma el valor inmediato `x` (Ej: 10) al valor del registro `$s1` y almacena el resultado en el registro `$s2`.  
 > Que sea con signo extenido significa que si el valor inmediato es negativo, se extiende el bit de signo para que el valor sea negativo. 
 >  
 > **Ejemplo ASM:**
@@ -37,7 +42,7 @@
 ----
 
 > [!TIP]
-> La instrucción `sub` resta los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`. 
+> La instrucción `sub` (_`SUBtraction`_) resta los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`. 
 >  
 > **Ejemplo ASM:**
 > ```asm
@@ -47,7 +52,8 @@
 ----
 
 > [!TIP]
-> La instrucción `lw` carga la palabra en la dirección de memoria contenida en el registro `$t1` en el registro `$t2`. El desplazamiento es `0`, por lo que se carga la palabra exactamente en la dirección contenida en `$t1`.  
+> La instrucción `lw` (_`Load Word`_) carga la palabra en la dirección de memoria contenida en el registro `$t1` en el registro `$t2`. El desplazamiento es `0`, por lo que se carga la palabra exactamente en la dirección contenida en `$t1`.
+> 
 > *Puede ser útil para cargar un valor de un vector en un registro.*
 > 
 > **Ejemplo ASM:**
@@ -58,7 +64,7 @@
 ----
 
 > [!TIP]
-> La instrucción `sll` desplaza el contenido del registro `$t1` un `d` posiciones a la izquierda y almacena el resultado en el registro `$t2`.
+> La instrucción `sll` (_`Shift Left Logical`_) desplaza el contenido del registro `$t1` un `d` posiciones a la izquierda y almacena el resultado en el registro `$t2`.
 > 
 > Esto, en la prácica, es equivalente a multiplicar el contenido de `$t1` por 2^d^.
 >
@@ -72,7 +78,7 @@
 ----
 
 > [!TIP]
-> La instrucción `slt` establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor del registro `$t0`, de lo contrario, establece el valor del registro `$t2` en 0. 
+> La instrucción `slt` (_`Set on Less Than`_) establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor del registro `$t0`, de lo contrario, establece el valor del registro `$t2` en 0. 
 >  
 > **En Python:**
 > ```py
@@ -92,7 +98,7 @@
 ----
 
 > [!TIP]
-> La instrucción `slti` establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor inmediato `x`, de lo contrario, establece el valor del registro `$t2` en 0.  
+> La instrucción `slti` (_`Set on Less Than Inmediate`_) establece el valor del registro `$t2` en 1 si el valor del registro `$t1` es menor que el valor inmediato `x`, de lo contrario, establece el valor del registro `$t2` en 0.  
 > 
 > Funciona igual que `slt`, pero en lugar de comparar con el valor de otro registro, compara con un valor inmediato.
 >
@@ -106,9 +112,46 @@
 ----
 
 > [!TIP]
-> La instrucción `la` carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
+> La instrucción `la` (_`Load Address`_) carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
 >
 > **Ejemplo ASM:**
 > ```asm
 > la $s0, A
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `sw` (_`Store Word`_) almacena el contenido del registro `$t1` en la dirección de memoria contenida en el registro `$t0`. El desplazamiento en el ejemplo es `4`, por lo que se almacena el contenido de `$t1` en la dirección `$t0 + 4`.
+>
+> *Puede ser útil para almacenar un valor en una posición de un vector vector.*
+>
+> **Ejemplo ASM:**
+> ```asm
+> sw $t1, 4($t0)
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `beq` (_`Branch if EQual`_) salta a la etiqueta `L1` si el contenido de los registros `$t1` y `$t2` son iguales.
+>
+> *Puede ser útil para implementar un bucle.*
+>
+> **Ejemplo ASM:**
+> ```asm
+> beq $t1, $t2, Loop
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `bne` (_`Branch if Not Equal`_) salta a la etiqueta `L1` si el contenido de los registros `$t1` y `$t2` no son iguales.  
+> *Es el contrario a beq*.  
+> 
+> *Puede ser útil para implementar un bucle.*
+>
+> **Ejemplo ASM:**
+> ```asm
+> bne $t1, $t2, Loop
 > ```
