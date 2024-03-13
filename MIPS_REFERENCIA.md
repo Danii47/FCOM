@@ -95,7 +95,7 @@
 > Funciona igual que `slt`, pero en lugar de comparar con el valor de otro registro, compara con un valor inmediato.
 >
 > **Ejemplo ASM:**
-> ```mips
+> ```asm
 > # $t1 = 2
 > slti $t2, $t1, 3
 > # $t2 = 1 (2 es menor que 3)
