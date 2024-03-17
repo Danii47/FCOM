@@ -13,7 +13,7 @@
 	B: .space 40
 	C: .space 40
 .text
-	main: 
+	main:
 		la $s0, A # Carga la dirección de A en $s0
 		add $s6, $s0, $0 # Dejo $s6 en la dirección de $s0 para recorrerlo del derecho
 		
@@ -26,13 +26,11 @@
 		la $s4, B
 		la $s5, C
 
-		
-
 		addi $t2, $0, 2
+		
 	Loop:
 		
 		lw $t0, ($s0) # Carga el valor de $s0 en $t0 (recorriendolo al revés)
-		lw $t1, ($s6) # Carga el valor de $s6 en $t1 (recorriendolo del derecho)
 		
 		div $t0, $t2 # Divido el valor del vector entre 2
 		mfhi $t3 # $t3 de dividir el valor entre 2 (0 -> PAR | 1 -> IMPAR)
@@ -42,10 +40,7 @@
 		
 		LoopContinuation:
 			
-			# TODO: AÑADIR COMPROBACION
-		
 			addi $s0, $s0, -4 # Sumo 4 a la dirección del registro para poder acceder al siguiente elemento
-			addi $s6, $s6, 4
 			
 			
 			add $s2, $s2, $t0 # Suma $s2 + $t0
@@ -56,8 +51,17 @@
 		
 			div $s3, $s2, $s1 
 
-			li $v0 10 # Cierra el programa
-			syscall
+			
+	la $s0, A # Carga la dirección de A en $s0
+	addi $s0, $s0, 36 # $s0 en 36 para recorrer el vector al revés
+	
+	AlternateValuesLoop:
+		lw $t0, ($s0) # Carga el valor de $s0 en $t0 (recorriendolo al revés)
+		lw $t1, ($s6) # Carga el valor de $s6 en $t1 (recorriendolo del derecho)
+		ble $t4, 5, AlternateValues
+	
+	li $v0 10 # Cierra el programa
+	syscall
 		
 	ACopy:
 		sw $t0 ($s4)
@@ -72,6 +76,11 @@
 	AlternateValues:
 		sw $t0, ($s6)
 		sw $t1, ($s0)
+		addi $s6, $s6, 4
+		addi $s0, $s0, -4
+		addi $t4, $t4, 1
+		
+		j AlternateValuesLoop
 		
 # A la vista de lo observado en el paso anterior: ¿Cuál es el propósito del programa? ¿Cuántas iteraciones
 # realiza? Cuando se observa la consola (en la parte inferior, pestaña Run I/O) ¿Por qué el programa no
