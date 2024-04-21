@@ -20,6 +20,17 @@
 	printRegisterFpText: .asciiz "fp"
 	printRegisterRaText: .asciiz "ra"
 	
+	translateInstructionText1: .asciiz "Código de operación: "
+	translateInstructionText2: .asciiz " (es de tipo R)"
+	translateInstructionText3: .asciiz "Registros utilizados: rs = "
+	translateInstructionText4: .asciiz "; rt = "
+	translateInstructionText5: .asciiz "; rd = "
+	translateInstructionText6: .asciiz "La instrucción no es de tipo R"
+	
+	buffer1: .space 6
+	buffer2: .space 6
+	buffer3: .space 6
+	
 	jumpLine: .asciiz "\n"
 
 .text
@@ -70,6 +81,10 @@
 		
 		# ENTREGABLE 2
 		
+		la $a1, buffer1
+		la $a2, buffer2
+		la $a3, buffer3
+		
 		la $a0, enterNumber				#
 		li $v0, 4						#
 		syscall							#
@@ -77,10 +92,9 @@
 		li $v0, 5						#
 		syscall							#
 		
-		add $a0, $0, $v0
-		add $a1, $a1, $0				##### TODO: El $a1 hay que cambiarle el valor???¿¿??¿¿¿¿??
+		add $a0, $0, $v0				
 		
-		jal printRegister
+		jal translateInstruction
 		
 		li $v0, 10
 		syscall
@@ -102,13 +116,11 @@
 		blt $t0, 0, printRegisterError
 		bgt $t0, 31, printRegisterError
 		
-		la $a0, printRegisterText
-		li $v0, 4
-		syscall
-		
 		la $a0, printRegisterDollarText
 		li $v0, 4
 		syscall
+		
+		sw $a0, -6($sp)
 		
 		beq $t0, 0, printZero
 		beq $t0, 1, printAt
@@ -123,18 +135,21 @@
 		beq $t0, 30, printFp
 		beq $t0, 31, printRa
 		
-		
-		
 		printZero:
 			la $a0, printRegisterZeroText
 			li $v0, 4
 			syscall
+			
+			sw $a0, -5($sp)
+			
 			j endPrintRegister			
-		
 		printAt:
 			la $a0, printRegisterAtText
 			li $v0, 4
 			syscall
+			
+			sh $a0, -5($sp)
+			
 			j endPrintRegister
 		
 		printV:
@@ -142,11 +157,16 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -2
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 			
 		printA:
@@ -154,11 +174,16 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -4
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 		
 		printT0:
@@ -166,11 +191,16 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -8
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 		
 		printS:
@@ -178,11 +208,16 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -16
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 		
 		printT8:
@@ -190,11 +225,16 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -16
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 		
 		printK:
@@ -202,35 +242,52 @@
 			li $v0, 4
 			syscall
 			
+			sb $a0, -5($sp)
+			
 			addi $t0, $t0, -26
 			
 			add $a0, $0, $t0
 			li $v0, 1
 			syscall
+			
+			sw $a0, -4($sp)
+			
 			j endPrintRegister
 		
 		printGp:
 			la $a0, printRegisterGpText
 			li $v0, 4
 			syscall
+			
+			sh $a0, -5($sp)
+			
 			j endPrintRegister
-		
+			
 		printSp:
 			la $a0, printRegisterSpText
 			li $v0, 4
 			syscall
+			
+			sh $a0, -5($sp)
+			
 			j endPrintRegister
 			
 		printFp:
 			la $a0, printRegisterFpText
 			li $v0, 4
 			syscall
+			
+			sh $a0, -5($sp)
+			
 			j endPrintRegister
 		
 		printRa:
 			la $a0, printRegisterRaText
 			li $v0, 4
 			syscall
+			
+			sh $a0, -5($sp)
+			
 			j endPrintRegister
 			
 		printRegisterError:
@@ -238,11 +295,101 @@
 			li $v0, 4
 			syscall
 			
+			li $v0, 1
+			j exitPrintRegister
 			
 		endPrintRegister:
-			jr $ra
+
+			
+			exitPrintRegister:
+			
+				jr $ra
 		
-	
+	translateInstruction:
+		add $t1, $0, $a0
+		
+		sw $ra, 0($sp)
+		
+		la $a0, translateInstructionText1
+		li $v0, 4
+		syscall
+		
+		srl $a0, $t1, 26
+		li $v0, 1
+		syscall
+		
+		bne $a0, $0, translateInstructionError
+		
+		la $a0, translateInstructionText2
+		li $v0, 4
+		syscall
+		
+		la $a0, jumpLine
+		li $v0, 4
+		syscall
+		
+		la $a0, translateInstructionText3
+		li $v0, 4
+		syscall
+		
+		sll $a0, $t1, 6
+		srl $a0, $a0, 27
+		
+		jal printRegister
+		
+		lb $t2, -6($sp)
+		sb $t2, 0($a1)
+		lb $t2, -5($sp)
+		sb $t2, 1($a1)
+		lw $t2, -4($sp)
+		sw $t2, 2($a1)
+		
+		la $a0, translateInstructionText4
+		li $v0, 4
+		syscall
+		
+		sll $a0, $t1, 11
+		srl $a0, $a0, 27
+		
+		jal printRegister
+		
+		lb $t2, -6($sp)
+		sb $t2, 0($a2)
+		lb $t2, -5($sp)
+		sb $t2, 1($a2)
+		lw $t2, -4($sp)
+		sw $t2, 2($a2)
+		
+		la $a0, translateInstructionText5
+		li $v0, 4
+		syscall
+		
+		sll $a0, $t1, 16
+		srl $a0, $a0, 27
+		
+		jal printRegister
+		
+		lb $t2, -6($sp)
+		sb $t2, 0($a3)
+		lb $t2, -5($sp)
+		sb $t2, 1($a3)
+		lw $t2, -4($sp)
+		sw $t2, 2($a3)
+		
+		li $v0, 0
+		
+		exitTranslateInstruction:
+			lw $ra, 0($sp)
+			jr $ra
+			
+		translateInstructionError:
+			la $a0, translateInstructionText5
+			li $v0, 4
+			syscall
+			
+			li $v0, 1
+			
+			j exitTranslateInstruction
 	
 	
 	
