@@ -4,7 +4,7 @@
 # $s3 -> Media aritmética
 
 # $s4 -> Dirección de B
-# $s5 -> Dirección de C
+# $s8 -> Dirección de C
 # $s6 -> Dirección de A (para recorrerlo del derecho)
 
 
@@ -12,8 +12,10 @@
 	A: .word 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 	B: .space 40
 	C: .space 40
+	F: .space 80
 .text
 	main:
+		# --------| PRIMERA PARTE |-------- #
 		la $s0, A # Carga la dirección de A en $s0
 		add $s6, $s0, $0 # Dejo $s6 en la dirección de $s0 para recorrerlo del derecho
 		
@@ -23,20 +25,17 @@
 		add $s2, $0, $0 # Deja el registro $s2 a 0 (suma)
 		add $s3, $0, $0 # Deja el registro $s3 a 0 (media aritmetica)
 
-		la $s4, B
+		la $s7, B
 		la $s5, C
-
-		addi $t2, $0, 2
 		
 	Loop:
 		
 		lw $t0, ($s0) # Carga el valor de $s0 en $t0 (recorriendolo al revés)
 		
-		div $t0, $t2 # Divido el valor del vector entre 2
-		mfhi $t3 # $t3 de dividir el valor entre 2 (0 -> PAR | 1 -> IMPAR)
+		andi $t2, $t0, 1 # Compruebo si el valor es par comprobando el bit menos significativo
 		
-		beq $t3, 0, ACopy
-		beq $t3, 1, BCopy
+		beqz $t2, ACopy
+		bnez $t2, BCopy
 		
 		LoopContinuation:
 			
@@ -60,12 +59,51 @@
 		lw $t1, ($s6) # Carga el valor de $s6 en $t1 (recorriendolo del derecho)
 		ble $t4, 5, AlternateValues
 	
-	li $v0 10 # Cierra el programa
+	
+	# --------| SEGUNDA PARTE |-------- #
+	
+	la $s5, F
+	add $t0, $0, $0 # Valor n de la sucesión
+	addi $t1, $0, 1 # Valor n+1 de la sucesión
+	
+	# Guardo en el vector los dos primeros valores de la definición de Fibonacci
+	sw $t0, ($s5)
+	sw $t1, 4($s5)
+	
+	
+	addi $s4, $0, 1 # Variable resultado, almacena la suma de los 20 primeros términos
+	addi $t3, $0, 2 # Variable "i" de iteración
+	
+	
+	FibonacciLoop:
+		
+		lw $t0, ($s5) # Cargo el valor n de la sucesión
+		lw $t1, 4($s5) # Cargo el valor n+1 de la sucesión
+		
+		add $t2, $t1, $t0 # Valor temporal de la suma del N siguiente
+		
+		add $s4, $s4, $t2 # Añado al registro el siguiente valor sumandoselo
+		
+		sw $t2, 8($s5) # Guardo el valor de la suma en la posición n+2
+		
+		addi $s5, $s5, 4 # Avanzo 4 posiciones para avanzar 4 bytes sobre el array F
+		
+		addi $t3, $t3, 1 # Sumo 1 a la variable de iteración
+		
+		blt $t3, 20, FibonacciLoop # Si $t3 es menor que 20 vuelvo al bucle
+
+	
+	# --------| TERCERA PARTE |-------- #
+	
+	
+	
+	
+	li $v0 10 # Cierro el programa
 	syscall
 		
 	ACopy:
-		sw $t0 ($s4)
-		addi $s4, $s4, 4
+		sw $t0 ($s7)
+		addi $s7, $s7, 4
 		j LoopContinuation
 	
 	BCopy:
