@@ -9,12 +9,22 @@
 | addi | rd, rs, inm | Suma inmediata (con signo extendido): rd <- rs + inm | addi $s2, $s1, 5 |
 | sub | rd, rs, rt | Resta con detección de desbordamiento: rd <- rs - rt | sub $s2, $s1, $s0 |
 | lw | rd, d(rs) | Lee el contenido de rs + d (desplazamiento) y lo carga en rd | lw $t1, 0($t0) |
+| sw | rt, d(rs) | Almacena el contenido de rt en la dirección de memoria rs + d | sw $t1, 4($t0) |
+| move | rd, rs | Copia el contenido de rs en rd | move $t2, $t1 |
 | sll | rd, rt, d | Desplaza a la izquierda el contenido de rt d veces y lo almacena en rd | sll $t2, $t1, 2 |
 | slt | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | slt $t2, $t1, $t0 |
 | slti | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, establece rd en 0 | slti $t2, $t1, 5 |
-| sw | rt, d(rs) | Almacena el contenido de rt en la dirección de memoria rs + d | sw $t1, 4($t0) |
 | beq | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs == rt | beq $t1, $t2, L1 |
 | bne | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs != rt | bne $t1, $t2, L1 |
+| ble | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs <= rt | ble $t1, $t2, L1 |
+| blt | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs < rt | blt $t1, $t2, L1 |
+| bge | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs >= rt | bge $t1, $t2, L1 |
+| bgt | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs > rt | bgt $t1, $t2, L1 |
+| j | Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta | j L1 |
+| jal | Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta y guarda la dirección de retorno en $ra | jal L1 |
+| jr | rs | Salta a la dirección de memoria contenida en rs | jr $ra |
+| jalr | rd, rs | Salta a la dirección de memoria contenida en rs y guarda la dirección de retorno en rd | jalr $t1, $ra |
+
 
 ----
 
@@ -64,6 +74,38 @@
 ----
 
 > [!TIP]
+> La instrucción `sw` (_`Store Word`_) almacena el contenido del registro `$t1` en la dirección de memoria contenida en el registro `$t0`. El desplazamiento en el ejemplo es `4`, por lo que se almacena el contenido de `$t1` en la dirección `$t0 + 4`.
+>
+> *Puede ser útil para almacenar un valor en una posición de un vector vector.*
+>
+> **Ejemplo ASM:**
+> ```asm
+> sw $t1, 4($t0)
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `move` (_`MOVE`_) copia el contenido del registro `$t1` en el registro `$t2`.
+>
+> *Puede ser útil para copiar el contenido de un registro a otro.*
+> 
+> **En Python / JavaScript:**
+> ```py
+> t2 = t1
+> ```
+> **Ejemplo ASM:**
+> ```asm
+> move $t2, $t1
+> ```
+> **Otra forma equivalente sin usar move:**
+> ```asm
+> add $t2, $zero, $t1
+> ```
+
+----
+
+> [!TIP]
 > La instrucción `sll` (_`Shift Left Logical`_) desplaza el contenido del registro `$t1` un `d` posiciones a la izquierda y almacena el resultado en el registro `$t2`.
 > 
 > Esto, en la prácica, es equivalente a multiplicar el contenido de `$t1` por 2^d^.
@@ -84,7 +126,7 @@
 > ```py
 > t2 = 1 if t1 < t0 else 0
 > ```
-> **En JavaScrip:**
+> **En JavaScript:**
 > ```js
 > t2 = (t1 < t0) ? 1 : 0
 > ```
@@ -122,18 +164,6 @@
 ----
 
 > [!TIP]
-> La instrucción `sw` (_`Store Word`_) almacena el contenido del registro `$t1` en la dirección de memoria contenida en el registro `$t0`. El desplazamiento en el ejemplo es `4`, por lo que se almacena el contenido de `$t1` en la dirección `$t0 + 4`.
->
-> *Puede ser útil para almacenar un valor en una posición de un vector vector.*
->
-> **Ejemplo ASM:**
-> ```asm
-> sw $t1, 4($t0)
-> ```
-
-----
-
-> [!TIP]
 > La instrucción `beq` (_`Branch if EQual`_) salta a la etiqueta `L1` si el contenido de los registros `$t1` y `$t2` son iguales.
 >
 > *Puede ser útil para implementar un bucle.*
@@ -155,3 +185,84 @@
 > ```asm
 > bne $t1, $t2, Loop
 > ```
+
+----
+
+> [!TIP]
+> La instrucción `ble` (_`Branch if Less or Equal`_) salta a la etiqueta `L1` si el contenido de los registro `$t1` es menor o igual al contenido de `$t2`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> ble $t1, $t2, Loop
+> ```
+
+----
+
+> [!TIP]
+> La instruccion `blt` (_`Branch if Less Than`_) salta a la etiqueta `L1` si el contenido de los registro `$t1` es menor al contenido de `$t2`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> blt $t1, $t2, Loop
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `bge` (_`Branch if Greater or Equal`_) salta a la etiqueta `L1` si el contenido de los registro `$t1` es mayor o igual al contenido de `$t2`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> bge $t1, $t2, Loop
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `bgt` (_`Branch if Greater Than`_) salta a la etiqueta `L1` si el contenido de los registro `$t1` es mayor al contenido de `$t2`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> bgt $t1, $t2, Loop
+> ```
+----
+
+> [!TIP]
+> La instrucción `j` (_`Jump`_) salta a la etiqueta `L1` sin condición alguna.
+>
+> **Ejemplo ASM:**
+> ```asm
+> j Loop
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `jal` (_`Jump And Link`_) salta a la etiqueta `L1` y guarda la dirección de retorno en el registro `$ra`. 
+>
+> **Ejemplo ASM:**
+> ```asm
+> jal Loop
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `jr` (_`Jump Register`_) salta a la dirección de memoria contenida en el registro `$ra`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> jr $ra
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `jalr` (_`Jump And Link Register`_) salta a la dirección de memoria contenida en el registro `$ra` y guarda la dirección de retorno en el registro `$t1`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> jalr $t1, $ra
+> ```
+
+----
