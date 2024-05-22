@@ -284,4 +284,17 @@
 > jalr $t1, $ra
 > ```
 
+## Funciones de entrada/salida (Syscall)
 
+| Código | Descripción | Argumentos | Resultado |
+| - | - | - | - |
+| 1 | Imprimir entero | $a0 = entero | - |
+| 2 | Imprimir flotante | $f12 = flotante | - |
+| 3 | Imprimir doble flotante | $f12 = doble flotante | - |
+| 4 | Imprimir cadena | $a0 = dirección de la cadena (terminada en el caracter nulo) | - |
+| 5 | Leer entero | - | entero guardado en $v0 |
+| 6 | Leer flotante | - | flotante guardado en $f0 |
+| 7 | Leer doble flotante | - | doble flotante guardado en $f0 |
+| 8 | Leer cadena | $a0 = dirección de la cadena, $a1 = longitud máxima de la cadena | - |
+| 10 | Terminar programa | - | - |
+| 11 | Imprimir caracter | $a0 = caracter (entero ASCII del caracter) | - |
