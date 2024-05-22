@@ -2,6 +2,25 @@
 # HOJA DE REFERENCIA MIPS
 
 
+## Tipos de registros
+
+| Registro | Descripción |
+| - | - |
+| \$zero | Siempre contiene el valor 0 |
+| \$at | Reservado para el ensamblador |
+| \$v0-$v1 | Valores de retorno de las funciones |
+| \$a0-$a3 | Argumentos de las funciones |
+| \$t0-$t9 | Temporales (no preservados) |
+| \$s0-$s7 | Temporales (preservados) |
+| \$k0-$k1 | Reservados para el kernel |
+| $gp | Puntero global (Global Pointer) |
+| $sp | Puntero de pila (Stack Pointer) |
+| $fp | Puntero de marco (Frame Pointer) |
+| $ra | Dirección de retorno (Return Address) |
+
+
+## Instrucciones
+
 | Instrucción | Parámetros | Descripción | Ejemplo |
 | - | - | - | - |
 | la | rd, Etiqueta | Carga la dirección representada por Etiqueta en el registro rd | la $s0, A |
@@ -265,4 +284,4 @@
 > jalr $t1, $ra
 > ```
 
-----
+
