@@ -295,6 +295,6 @@
 | 5 | Leer entero | - | entero guardado en $v0 |
 | 6 | Leer flotante | - | flotante guardado en $f0 |
 | 7 | Leer doble flotante | - | doble flotante guardado en $f0 |
-| 8 | Leer cadena | $a0 = dirección de la cadena, $a1 = longitud máxima de la cadena | - |
+| 8 | Leer cadena | $a0 = dirección de la cadena<br> $a1 = longitud máxima de la cadena | - |
 | 10 | Terminar programa | - | - |
 | 11 | Imprimir caracter | $a0 = caracter (entero ASCII del caracter) | - |
