@@ -4,19 +4,20 @@
 
 ## Tipos de registros
 
-| Registro | Descripción |
-| - | - |
-| \$zero | Siempre contiene el valor 0 |
-| \$at | Reservado para el ensamblador |
-| \$v0-$v1 | Valores de retorno de las funciones |
-| \$a0-$a3 | Argumentos de las funciones |
-| \$t0-$t9 | Temporales (no preservados) |
-| \$s0-$s7 | Temporales (preservados) |
-| \$k0-$k1 | Reservados para el kernel |
-| $gp | Puntero global (Global Pointer) |
-| $sp | Puntero de pila (Stack Pointer) |
-| $fp | Puntero de marco (Frame Pointer) |
-| $ra | Dirección de retorno (Return Address) |
+| Número | Registro | Descripción |
+| - | - | - |
+| 0 | \$zero | Siempre contiene el valor 0 |
+| 1 | \$at | Reservado para el ensamblador |
+| 2-3 | \$v0-$v1 | Valores de retorno de las funciones |
+| 4-7 | \$a0-$a3 | Argumentos de las funciones |
+| 8-15 | \$t0-$t7 | Temporales (no preservados) |
+| 16-23 | \$s0-$s7 | Temporales (preservados) |
+| 24-25 | \$t8-$t9 | Temporales (no preservados) |
+| 26-27 | \$k0-$k1 | Reservados para el kernel |
+| 28 | $gp | Puntero global (Global Pointer) |
+| 29 | $sp | Puntero de pila (Stack Pointer) |
+| 30 | $fp | Puntero de marco (Frame Pointer) |
+| 31 | $ra | Dirección de retorno (Return Address) |
 
 
 ## Instrucciones
