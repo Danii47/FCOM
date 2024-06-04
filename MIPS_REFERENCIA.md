@@ -3,7 +3,7 @@
 
 ## Indice
 1. [Tipos de registros](#tipos-de-registros)
-2. [Registros extra](#registros-extra
+2. [Registros extra](#registros-extra)
 3. [Funciones de entrada/salida (Syscall)](funciones-de-entradasalida-syscall)
 4. [Instrucciones](instrucciones)
 
