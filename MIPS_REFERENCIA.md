@@ -6,6 +6,9 @@
 2. [Registros extra](#registros-extra)
 3. [Funciones de entrada/salida (Syscall)](funciones-de-entradasalida-syscall)
 4. [Instrucciones](instrucciones)
+5. [Ejemplos de instrucciones](#ejemplos-de-instrucciones)
+
+---
 
 ## Tipos de registros
 
@@ -24,12 +27,14 @@
 | 30 | $fp | Puntero de marco (Frame Pointer) |
 | 31 | $ra | Dirección de retorno (Return Address) |
 
+---
 
 ## Registros extra
 | Número | Registro | Descripción |
 | - | - | - |
 | 0-31 | \$f0-$f31 | Reservados para valores float y double |
 
+---
 
 ## Funciones de entrada/salida (Syscall)
 
@@ -46,6 +51,7 @@
 | 10 | Terminar programa | - | - |
 | 11 | Imprimir caracter | $a0 = caracter (entero ASCII del caracter) | - |
 
+---
 
 ## Instrucciones
 
@@ -74,6 +80,8 @@
 
 
 ----
+
+## Ejemplos de instrucciones
 
 > [!TIP]
 > La instrucción `add` (_`ADD`_) suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
