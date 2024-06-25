@@ -2,11 +2,13 @@
 # HOJA DE REFERENCIA MIPS
 
 ## Indice
-1. [Tipos de registros](#tipos-de-registros)
-2. [Registros extra](#registros-extra)
-3. [Funciones de entrada/salida (Syscall)](funciones-de-entradasalida-syscall)
-4. [Instrucciones](instrucciones)
-5. [Ejemplos de instrucciones](#ejemplos-de-instrucciones)
+- [HOJA DE REFERENCIA MIPS](#hoja-de-referencia-mips)
+  - [Indice](#indice)
+  - [Tipos de registros](#tipos-de-registros)
+  - [Registros extra](#registros-extra)
+  - [Funciones de entrada/salida (Syscall)](#funciones-de-entradasalida-syscall)
+  - [Instrucciones](#instrucciones)
+  - [Ejemplos de instrucciones](#ejemplos-de-instrucciones)
 
 ---
 
@@ -58,6 +60,8 @@
 | Instrucción | Parámetros | Descripción | Ejemplo |
 | - | - | - | - |
 | la | rd, Etiqueta | Carga la dirección representada por Etiqueta en el registro rd | la $s0, A |
+| li | rd, inm | Carga el valor inmediato inm en el registro rd | li $s0, 5 |
+| lui | rd, inm | Carga el valor inmediato inm en los bits más significativos del registro rd | lui $s0, 5 |
 | add | rd, rs, rt | Suma con detección de desbordamiento: rd <- rs + rt | add $s2, $s1, $s0 |
 | addi | rd, rs, inm | Suma inmediata (con signo extendido): rd <- rs + inm | addi $s2, $s1, 5 |
 | sub | rd, rs, rt | Resta con detección de desbordamiento: rd <- rs - rt | sub $s2, $s1, $s0 |
@@ -82,6 +86,38 @@
 ----
 
 ## Ejemplos de instrucciones
+
+> [!TIP]
+> La instrucción `la` (_`Load Address`_) carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
+>
+> **Ejemplo ASM:**
+> ```asm
+> la $s0, A
+> ```
+
+----
+
+> [!TIP]
+> La instrucción `li` (_`Load Inmediate`_) carga el valor inmediato `5` en el registro `$s0`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> li $s0, 5
+> ```
+> *También puede usarse para cargar un valor negativo.*
+
+----
+
+> [!TIP]
+> La instrucción `lui` (_`Load Upper Inmediate`_) carga el valor inmediato `5` en los bits más significativos del registro `$s0`.
+>
+> **Ejemplo ASM:**
+> ```asm
+> lui $s0, 5
+> ```
+> *También puede usarse para cargar un valor negativo.*
+
+----
 
 > [!TIP]
 > La instrucción `add` (_`ADD`_) suma los valores de los registros `$s1` y `$s0` y almacena el resultado en el registro `$s2`.  
@@ -204,16 +240,6 @@
 > # $t1 = 2
 > slti $t2, $t1, 3
 > # $t2 = 1 (2 es menor que 3)
-> ```
-
-----
-
-> [!TIP]
-> La instrucción `la` (_`Load Address`_) carga la dirección de memoria representada por la etiqueta `A` (Ej: un vector) en el registro `$s0`.  
->
-> **Ejemplo ASM:**
-> ```asm
-> la $s0, A
 > ```
 
 ----
