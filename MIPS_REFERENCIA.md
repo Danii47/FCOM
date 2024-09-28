@@ -3,12 +3,12 @@
 
 ## Indice
 - [HOJA DE REFERENCIA MIPS](#hoja-de-referencia-mips)
-  - [Indice](#indice)
-  - [Tipos de registros](#tipos-de-registros)
-  - [Registros extra](#registros-extra)
-  - [Funciones de entrada/salida (Syscall)](#funciones-de-entradasalida-syscall)
-  - [Instrucciones](#instrucciones)
-  - [Ejemplos de instrucciones](#ejemplos-de-instrucciones)
+- [Indice](#indice)
+- [Tipos de registros](#tipos-de-registros)
+- [Registros extra](#registros-extra)
+- [Funciones de entrada/salida (Syscall)](#funciones-de-entradasalida-syscall)
+- [Instrucciones](#instrucciones)
+- [Ejemplos de instrucciones](#ejemplos-de-instrucciones)
 
 ---
 
