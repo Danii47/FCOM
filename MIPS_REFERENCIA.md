@@ -16,18 +16,18 @@
 
 | Número | Registro | Descripción |
 | - | - | - |
-| 0 | \$zero | Siempre contiene el valor 0 |
+| 0 | **\$zero** | Siempre contiene el valor 0 |
 | 1 | \$at | Reservado para el ensamblador |
-| 2-3 | \$v0-$v1 | Valores de retorno de las funciones |
-| 4-7 | \$a0-$a3 | Argumentos de las funciones |
-| 8-15 | \$t0-$t7 | Temporales (no preservados) |
-| 16-23 | \$s0-$s7 | Temporales (preservados) |
-| 24-25 | \$t8-$t9 | Temporales (no preservados) |
+| 2-3 | **\$v0-$v1** | Valores de retorno de las funciones |
+| 4-7 | **\$a0-$a3** | Argumentos de las funciones |
+| 8-15 | **\$t0-$t7** | Temporales (no preservados) |
+| 16-23 | **\$s0-$s7** | Temporales (preservados) |
+| 24-25 | **\$t8-$t9** | Temporales (no preservados) |
 | 26-27 | \$k0-$k1 | Reservados para el kernel |
 | 28 | $gp | Puntero global (Global Pointer) |
 | 29 | $sp | Puntero de pila (Stack Pointer) |
 | 30 | $fp | Puntero de marco (Frame Pointer) |
-| 31 | $ra | Dirección de retorno (Return Address) |
+| 31 | **$ra** | Dirección de retorno (Return Address) |
 
 ---
 
@@ -40,15 +40,17 @@
 
 ## Funciones de entrada/salida (Syscall)
 
+**Para que el syscall se ejecute deberemos tener en el registro `$v0` el inmediato correspondiente**
+
 | Código | Descripción | Argumentos | Resultado |
 | - | - | - | - |
 | 1 | Imprimir entero | $a0 = entero | - |
 | 2 | Imprimir flotante | $f12 = flotante | - |
 | 3 | Imprimir doble flotante | $f12 = doble flotante | - |
 | 4 | Imprimir cadena | $a0 = dirección de la cadena (terminada en el caracter nulo) | - |
-| 5 | Leer entero | - | entero guardado en $v0 |
-| 6 | Leer flotante | - | flotante guardado en $f0 |
-| 7 | Leer doble flotante | - | doble flotante guardado en $f0 |
+| 5 | Leer entero | - | guarda el entero en $v0 |
+| 6 | Leer flotante | - | guarda el flotante en $f0 |
+| 7 | Leer doble flotante | - | guarda el doble flotante en $f0 |
 | 8 | Leer cadena | $a0 = dirección de la cadena<br> $a1 = longitud máxima de la cadena | - |
 | 10 | Terminar programa | - | - |
 | 11 | Imprimir caracter | $a0 = caracter (entero ASCII del caracter) | - |
@@ -57,32 +59,30 @@
 
 ## Instrucciones
 
-| Instrucción | Parámetros | Descripción | Ejemplo |
-| - | - | - | - |
-| la | rd, Etiqueta | Carga la dirección representada por Etiqueta en el registro rd | la $s0, A |
-| li | rd, inm | Carga el valor inmediato inm en el registro rd | li $s0, 5 |
-| lui | rd, inm | Carga el valor inmediato inm en los bits más significativos del registro rd | lui $s0, 5 |
-| add | rd, rs, rt | Suma con detección de desbordamiento: rd <- rs + rt | add $s2, $s1, $s0 |
-| addi | rd, rs, inm | Suma inmediata (con signo extendido): rd <- rs + inm | addi $s2, $s1, 5 |
-| sub | rd, rs, rt | Resta con detección de desbordamiento: rd <- rs - rt | sub $s2, $s1, $s0 |
-| lw | rd, d(rs) | Lee el contenido de rs + d (desplazamiento) y lo carga en rd | lw $t1, 0($t0) |
-| sw | rt, d(rs) | Almacena el contenido de rt en la dirección de memoria rs + d | sw $t1, 4($t0) |
-| move | rd, rs | Copia el contenido de rs en rd | move $t2, $t1 |
-| sll | rd, rt, d | Desplaza a la izquierda el contenido de rt d veces y lo almacena en rd | sll $t2, $t1, 2 |
-| slt | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | slt $t2, $t1, $t0 |
-| slti | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, establece rd en 0 | slti $t2, $t1, 5 |
-| beq | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs == rt | beq $t1, $t2, L1 |
-| bne | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs != rt | bne $t1, $t2, L1 |
-| ble | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs <= rt | ble $t1, $t2, L1 |
-| blt | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs < rt | blt $t1, $t2, L1 |
-| bge | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs >= rt | bge $t1, $t2, L1 |
-| bgt | rs, rt, Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta si rs > rt | bgt $t1, $t2, L1 |
-| j | Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta | j L1 |
-| jal | Etiqueta | Salta a la instrucción en la dirección de memoria representada por Etiqueta y guarda la dirección de retorno en $ra | jal L1 |
-| jr | rs | Salta a la dirección de memoria contenida en rs | jr $ra |
-| jalr | rd, rs | Salta a la dirección de memoria contenida en rs y guarda la dirección de retorno en rd | jalr $t1, $ra |
-
-
+| Instrucción | Significado | Parámetros | Descripción | Ejemplo |
+| :--- | :--- | :--- | :--- | :--- |
+| **la** | load address | rd, Etiqueta | Carga la dirección representada por Etiqueta en el registro rd | `la $s0, A` |
+| **li** | load immediate | rd, inm | Carga el valor inmediato inm en el registro rd | `li $s0, 5` |
+| **lui** | load upper immediate | rd, inm | Carga el valor inmediato inm en los bits más significativos del registro rd | `lui $s0, 5` |
+| **add** | add | rd, rs, rt | Suma con detección de desbordamiento: rd <- rs + rt | `add $s2, $s1, $s0` |
+| **addi** | add immediate | rd, rs, inm | Suma inmediata (con signo extendido): rd <- rs + inm | `addi $s2, $s1, 5` |
+| **sub** | subtract | rd, rs, rt | Resta con detección de desbordamiento: rd <- rs - rt | `sub $s2, $s1, $s0` |
+| **lw** | load word | rd, d(rs) | Lee el contenido de rs + d (desplazamiento) y lo carga en rd | `lw $t1, 0($t0)` |
+| **sw** | store word | rt, d(rs) | Almacena el contenido de rt en la dirección de memoria rs + d | `sw $t1, 4($t0)` |
+| **move** | move | rd, rs | Copia el contenido de rs en rd | `move $t2, $t1` |
+| **sll** | shift left logical | rd, rt, d | Desplaza a la izquierda el contenido de rt d veces y lo almacena en rd | `sll $t2, $t1, 2` |
+| **slt** | set less than | rd, rs, rt | Establece rd en 1 si rs < rt, de lo contrario, establece rd en 0 | `slt $t2, $t1, $t0` |
+| **slti** | set less than immediate | rd, rs, inm | Establece rd en 1 si rs < inm (con signo extendido), de lo contrario, 0 | `slti $t2, $t1, 5` |
+| **beq** | branch equal | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs == rt | `beq $t1, $t2, L1` |
+| **bne** | branch not equal | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs != rt | `bne $t1, $t2, L1` |
+| **ble** | branch less or equal | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs <= rt | `ble $t1, $t2, L1` |
+| **blt** | branch less than | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs < rt | `blt $t1, $t2, L1` |
+| **bge** | branch greater or equal | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs >= rt | `bge $t1, $t2, L1` |
+| **bgt** | branch greater than | rs, rt, Etiqueta | Salta a la instrucción en Etiqueta si rs > rt | `bgt $t1, $t2, L1` |
+| **j** | jump | Etiqueta | Salta a la instrucción en la dirección representada por Etiqueta | `j L1` |
+| **jal** | jump and link | Etiqueta | Salta a la instrucción en Etiqueta y guarda la dirección de retorno en $ra | `jal L1` |
+| **jr** | jump register | rs | Salta a la dirección de memoria contenida en rs | `jr $ra` |
+| **jalr** | jump and link register | rd, rs | Salta a la dirección de memoria en rs y guarda la dirección de retorno en rd | `jalr $t1, $ra` |
 ----
 
 ## Ejemplos de instrucciones
@@ -346,3 +346,95 @@
 > jalr $t1, $ra
 > ```
 
+> **Ejemplo de programa**
+>
+> Pide un numero al usuario y realiza el sumatorio hasta ese número. <br>
+> *Restricción: 1 < número < 99* <br>
+> ```asm
+> .data 
+>    string_resultado: .asciiz "Resultado: "
+>    string_error: .asciiz "Error: el numero debe estar entre 1 y 99"
+>
+> .text
+>
+>  main:
+>
+>   # $t0 -> numero
+>   # $t1 -> 1
+>   # $t2 -> 99
+>   # $t3 -> iterador
+>   # $t4 -> resultado
+>
+>   # LEER NUMERO
+>   # syscall 5 
+>   li   $v0, 5      # load inmediate 5
+>   syscall
+>
+>   # En este momento, tenemos el inmediato que el 
+>   # usuario ha introducido en $v0
+>   
+>   move $t0, $v0    # paso el valor de $v0 -> $t0 
+>                    # para poder operar con el
+>   
+>   # COMPROBAR 1 < numero < 99
+>
+>   # blt | bgt
+>   li   $t1, 1
+>   li   $t2, 99
+>
+>   blt  $t0, $t1, Error    # En caso de que $t0 < $t1, vamos a Error
+>   bgt  $t0, $t2, Error    # En caso de que $t0 > $t1, vamos a Error
+>   
+>   # Si estamos aquí, es porque todo ha ido bien
+>   
+>   # BUCLE PARA EL SUMATORIO
+>   
+>   # Tenemos que tener un contador que será la i que vaya sumando
+>   li   $t3, 1
+>
+>   # Tenemos que tener un resultado que será donde se iran
+>   # guardando las sumas parciales
+>   li   $t4, 0
+>
+>   Bucle:
+>     
+>     add  $t4, $t4, $t3    # res = res + i
+>     add  $t3, $t3, $t1    # i = i + 1
+>     # addi $t3, $t3, 1 tambien hubiera sido valido
+> 
+>     bge  $t0, $t3, Bucle  # mumero >= i ? Si: Bucle No: continua
+>
+>   # Si estamos aquí, es porque ya hemos completado el sumatorio
+>   
+>   # MOSTRAR EL RESULTADO
+>   
+>   # la | syscall 4 | syscall 1
+> 
+>   la   $a0, string_resultado  # load address
+>   li   $v0, 4     # para imprimir la cadena
+>   syscall
+> 
+>   # Ahora tengo en la terminal: "Resultado: "
+>   # Ahora toca imprimir el inmediato resultado
+>   # Para ello, el numero debe estar en $a0
+>   
+>   move $a0, $t4   # $a0 <- resultado
+>   li   $v0, 1     # para imprimir el inmediato
+>   syscall
+>   
+>   # Ahora en la terminal ya tengo "Resultado: `x`"
+>
+>   Fin:
+>     # FINALIZAR EL PROGRAMA
+> 
+>     # syscall 10
+>   
+>     li   $v0, 10
+>     syscall
+>
+>   Error:
+>     la   $a0, string_error    # load address
+>     li   $v0, 4     # para imprimir la cadena
+>     syscall
+>     j    Fin        # Salta a la etiqueta Fin
+> ```
